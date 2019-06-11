@@ -1,6 +1,25 @@
 .App {
-  text-align: center;
+	padding-top: 36px;
+	text-align: center;
 }
+
+.DropDown-wrapper {
+	display: flex;
+	justify-content: center;
+}
+
+.ThingsList {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	padding: 16px;
+}
+
+.ThingList-item {
+	margin-bottom: 24px;
+	width: 30%;
+}
+
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
