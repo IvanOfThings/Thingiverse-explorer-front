@@ -1,4 +1,4 @@
-import React, { Component, Props } from 'react';
+import React, { Component } from 'react';
 
 
 const optionsString: string[] = ["Newest", "Popular", "Featured"];

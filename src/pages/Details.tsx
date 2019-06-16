@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { ThingsData } from '../common/types/Thing'
 import { Button } from '../components/Button'
 import gql from "graphql-tag";
@@ -21,7 +21,6 @@ interface DetailsProps {
         }
     }
 }
-
 
 export const Details: React.FC<DetailsProps> = (props) => {
     const { match: { params } } = props;
@@ -57,7 +56,7 @@ export const Details: React.FC<DetailsProps> = (props) => {
     let loadedView = <span>Resource not found</span>;
 
     if (data && data.thing) {
-        const { id, name, default_image, } = data.thing;
+        const { name, default_image, } = data.thing;
         let image = default_image.sizes.find(function (element) {
             return element.type === "preview";
         })

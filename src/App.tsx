@@ -1,11 +1,10 @@
-import React, { useState, Component, PropsWithRef } from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import React, { Component } from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import querystring from "querystring";
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 //import ApolloClient from "apollo-boost";
 import { ApolloClient } from "apollo-client";
-import { gql } from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
@@ -29,7 +28,7 @@ export const httpLink = createHttpLink({
 
 const authLink = setContext((_, { headers }) => {
   let cookies: Cookies = new Cookies()
-  // get the authentication token from local storage if it exists
+  // get the authentication token from cookies if it exists
   let token: null | string = cookies.get("access_token");
   // return the headers to the context so httpLink can read them
   return {
@@ -47,43 +46,6 @@ const client = new ApolloClient({
 
 class App extends Component {
 
-
-  /*
-    renderRedirect = () => {
-      let access_token: null | string = window.sessionStorage.getItem('access_token');
-      if (!access_token) {
-        return <Redirect to='/login' />
-      }
-      //    { this.renderRedirect() }  
-    }*/
-  /*
-  getToken = (): Promise<Token> => {
-    let tokenPromise: Promise<Token> = new Promise<Token>((resolve, reject) => {
-      axios({
-        method: 'get',
-        url: `http://localhost:3500/api/v1/things/token`,
-        headers: {
-          "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
-          "Content-Type": "application/json",
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Header': 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With'
-        }
-      }).then((res) => {
-        console.log('Respuesta recibida');
-        console.log(res.data);
-        if (res.data.access_token) {
-          let token = res.data.access_token
-          resolve(token);
-        } else {
-          reject(null);
-        }
-      }).catch(() => {
-        reject(null);
-      })
-    });
-    return tokenPromise;
-  }
-*/
   componentDidMount() {
     console.log(`Component Did Mount`);
 
@@ -112,7 +74,6 @@ class App extends Component {
         })
           .then((res) => {
             console.log(`Codigo encontrado: ${res}`);
-            console.log(res);
             access_token = res.data.access_token;
             if (access_token) {
               cookies.set("access_token", access_token);
@@ -120,45 +81,14 @@ class App extends Component {
           })
           .catch((err) => console.log(err));
       }
-    } else {
-      console.log(`Access Token en vigor: ${access_token}`);
-      /*
-      axios({
-        method: 'get',
-        url: `http://localhost:3500/api/v1/things/newest?access_token=${access_token}`,
-        headers: {
-          "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
-          "Content-Type": "application/json",
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Header': 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With'
-        }
-      }).then((res) => {
-        console.log('Respuesta recibida');
-        console.log(res.data);
-    
-        this.setState((state, props) => {
-          return {
-            things: res.data
-          }
-        });
-      })*/
     }
+    else console.log(`Access Token en vigor: ${access_token}`);
+
 
     this.setState({ token: access_token });
   }
 
-  /*
-  headers: {
-    'Authorization': 'Bearer ' + access_token,
-    "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
-    "Content-Type": "application/json",
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Header': 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With'
-  }*/
-
   render() {
-
-
     return (
       <div className="App" >
         <ApolloProvider client={client}>
