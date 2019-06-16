@@ -2,9 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 
-import { Creator } from '../common/types/Creator';
+import { ThingsData } from '../common/types/Thing';
 
-export type ThingProps = {
+/*
+export interface ThingProps {
     creator: Creator,
     id: number,
     name: string,
@@ -14,28 +15,38 @@ export type ThingProps = {
 }
 
 
-export class Thing extends React.Component<ThingProps> {
-    constructor(props: ThingProps) {
-        super(props);
-    }
+type Image = {
+    url: string
+}
 
+export interface ThingsData {
+    id: string,
+    name: string,
+    thumbnail: string
+    default_image: Image
+    collect_count: number,
+    like_count: number
+};*/
+
+interface ThingProp {
+    thing: ThingsData
+}
+
+
+export class Thing extends React.Component<ThingProp> {
     render() {
-        const { id, name, thumbnail, like_count } = this.props;
+        const { id, name, default_image, thumbnail } = this.props.thing;
+        let image = default_image.sizes.find(function (element) {
+            return element.type === "preview";
+        })
+        let imageUrl: string = image ? image.url : thumbnail;
         return (
             <Link to={`/detail/${id}`} className="card">
                 <div className="card">
                     <div className="card-image">
                         <figure className="image">
-                            <img src={thumbnail} alt={name} />
+                            <img src={imageUrl} alt={name} />
                         </figure>
-                    </div>
-                    <div className="card-content">
-                        <div className="media">
-                            <div className="media-content">
-                                <p className="title is-4">{name}</p>
-                                <p className="subtitle is-6">{like_count}</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </Link>

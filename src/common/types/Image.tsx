@@ -1,11 +1,11 @@
-export type Image = {
+export interface Image {
     id: number,
     url: string,
     name: string,
     sizes: ImageSized[]
 }
 
-export type ImageSized = {
+export interface ImageSized {
     type: ImageType,
     size: ImageSize,
     url: string

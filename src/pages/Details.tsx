@@ -1,92 +1,82 @@
-/*import React, { Component } from 'react';
 
-import { ButtonBackToHome } from '../components/ButtonBackToHome';
-import { Thing } from '../common/types/Thing';
+import React, { useState, useEffect } from 'react';
+import { ThingsData } from '../common/types/Thing'
+import { Button } from '../components/Button'
+import gql from "graphql-tag";
+import { useQuery } from "react-apollo-hooks";
 
-const API_KEY = 'ca16a425';
 
-type DetailsProps = {
+interface dataType {
+    thing: ThingsData
+}
+
+type ThingsListVariables = {
     id: number
+};
+
+interface DetailsProps {
+    match: {
+        params: {
+            id: number
+        }
+    }
 }
 
-interface State {
-    name: string,
-    imageUrl: string
-}
 
-export default class Detail extends Component<DetailsProps, State>{
+export const Details: React.FC<DetailsProps> = (props) => {
+    const { match: { params } } = props;
 
 
-    state: State = {
-        imageUrl: "",
-        name: ""
-    };
-
-    constructor(props: DetailsProps) {
-        super(props)
-    }*/
-    /*
-        _fetchThing_old = ({ id }) => {
-            fetch(`https://api.thingiverse.com/things/${id}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(response.statusText)
-                    }
-                    return response.json<{ data: T }>()
-                })
-                .then(data => {
-                    return data.data
-                })
-                .catch((error: Error) => {
-                    externalErrorLogging.error(error) /* <-- made up logging service *
-                    throw error /* <-- rethrow the error so consumer can still catch it *
-                })
-    
-                .then(res => {
-                    return res.json();
-                })
-                .then(movie => {
-                    console.log({ movie });
-                    this.setState({ movie });
-                });
-        }*/
-/*
-
-    _fetchThing = (id: number) => {
-
-        fetch(`https://api.thingiverse.com/things/${id}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(response.statusText)
+    const PRODUCTS_QUERY = gql`{
+        thing(id: ${params.id}) {
+            id
+            name
+            thumbnail
+            default_image{
+                url
+                sizes{
+                    url
+                    imageSize
+                    type 
                 }
-                return response.json<>()
-            })
-            .then(data => {
-                this.setState({ imageUrl: data.thumbnail });
-            })
-            .catch((error: Error) => {
-                //externalErrorLogging.error(error) /* <-- made up logging service *//*
-                throw error 
-            })
-
-    }
+            }
+            collect_count
+            like_count
+        }
+    }`;
 
 
-    componentDidMount() {
-        console.log(this.props);
-        const { id } = this.props.id;
-        this._fetchThing(id);
-    }
+    const { data, loading } = useQuery<dataType, ThingsListVariables>(
+        PRODUCTS_QUERY,
+        {
+            variables: { id: params.id }
+        }
+    );
 
-    render() {
-        const { imageUrl, name } = this.state;
-        return (
-            <div>
-                <ButtonBackToHome />
+    let loadingView = <span>Loading...</span>;
+    let loadedView = <span>Resource not found</span>;
+
+    if (data && data.thing) {
+        const { id, name, default_image, } = data.thing;
+        let image = default_image.sizes.find(function (element) {
+            return element.type === "preview";
+        })
+        let imageUrl: string = image ? image.url : default_image.url;
+        loadedView = (
+            <div className="center_content top_content bottom_content explore">
                 <h1>{name}</h1>
                 <img src={imageUrl} alt={name} />
             </div>
         );
     }
+    return (
+        <div>
+            <div className="center_content top_content justify">
+                <Button to="/">Go back to Home page</Button>
+            </div>
+            {loading ? loadingView : loadedView}
+        </div>
+    );
+
 }
-*/
+

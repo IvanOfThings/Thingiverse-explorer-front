@@ -1,4 +1,4 @@
-export type Creator = {
+export interface Creator {
     id: number,
     name: string,
     first_name: string,
