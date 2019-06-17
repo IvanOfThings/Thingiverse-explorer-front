@@ -1,8 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import querystring from "querystring";
-import axios from 'axios';
-import Cookies from 'universal-cookie';
 //import ApolloClient from "apollo-boost";
 import { ApolloClient } from "apollo-client";
 import { ApolloProvider } from "react-apollo";
@@ -10,109 +7,63 @@ import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloProvider as ApolloProviderHooks } from "react-apollo-hooks";
 import { setContext } from 'apollo-link-context';
+import { useCookies } from './components/customHooks/useCookies';
 
 import { SiteHeader } from './components/SiteHeader';
 import { Home } from './pages/Home';
 import { Details } from './pages/Details';
 import { NotFound } from './pages/NotFound';
+import AuthorizationRequest from './components/AuthorizationRequest';
 
 import 'bulma/css/bulma.css';
 
 import './App.css';
 
+const App: React.FC = (props) => {
+  const [access_token] = useCookies("access_token");
 
-export const httpLink = createHttpLink({
-  uri: "http://localhost:3500/graphql"
-});
+  const httpLink = createHttpLink({
+    uri: `${process.env.REACT_APP_BACK_GRAPHQL_URL}`
+  });
 
-
-const authLink = setContext((_, { headers }) => {
-  let cookies: Cookies = new Cookies()
-  // get the authentication token from cookies if it exists
-  let token: null | string = cookies.get("access_token");
-  // return the headers to the context so httpLink can read them
-  return {
-    headers: {
-      ...headers,
-      Authorization: token ? `Bearer ${token}` : "",
-    }
-  }
-});
-
-const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: authLink.concat(httpLink),
-});
-
-class App extends Component {
-
-  componentDidMount() {
-    console.log(`Component Did Mount`);
-
-    let cookies: Cookies = new Cookies()
-    const searchParams: URLSearchParams = new window.URLSearchParams(window.location.href);
-    const code: null | string = searchParams.get("code");
-    let access_token: null | string = cookies.get("access_token");
-    if (!access_token) {
-      console.log(`No hay access token en vigor`);
-      if (!code) {
-
-        let queryString = querystring.stringify({
-          response_type: "code",
-          client_id: "620efe7bf27be202b25c",
-          redirect_uri: "http://localhost:3000"
-        });
-
-        const uri: string = `https://www.thingiverse.com/login/oauth/authorize?${queryString}`
-        window.open(uri);
-        window.close();
-      } else {
-        console.log(`Regenerando access token`);
-        axios({
-          method: 'get',
-          url: `http://localhost:3500/api/v1/things/callback?code=${code}`
-        })
-          .then((res) => {
-            console.log(`Codigo encontrado: ${res}`);
-            access_token = res.data.access_token;
-            if (access_token) {
-              cookies.set("access_token", access_token);
-            }
-          })
-          .catch((err) => console.log(err));
+  const authLink = setContext((_, { headers }) => {
+    return {
+      headers: {
+        ...headers,
+        Authorization: access_token ? `Bearer ${access_token}` : "",
       }
     }
-    else console.log(`Access Token en vigor: ${access_token}`);
+  });
 
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: authLink.concat(httpLink),
+  });
 
-    this.setState({ token: access_token });
-  }
-
-  render() {
-    return (
-      <div className="App" >
-        <ApolloProvider client={client}>
-          <ApolloProviderHooks client={client}>
-            <div id="wrapper">
-              <div id="page-container">
-                <div id="navbar">
-                  <SiteHeader />
-                </div>
-                <div id="main">
-                  <BrowserRouter>
-                    <Switch>
-                      <Route exact path="/" component={Home} />
-                      <Route exact path="/detail/:id" component={Details} />
-                      <Route component={NotFound} />
-                    </Switch>
-                  </BrowserRouter>
-                </div>
+  return (
+    <div className="App" >
+      <ApolloProvider client={client}>
+        <ApolloProviderHooks client={client}>
+          <div id="wrapper">
+            <div id="page-container">
+              <div id="navbar">
+                <SiteHeader />
+              </div>
+              <div id="main">
+                <BrowserRouter>
+                  <AuthorizationRequest />
+                  <Switch>
+                    <Route exact path="/" component={Home} />
+                    <Route exact path="/detail/:id" component={Details} />
+                    <Route component={NotFound} />
+                  </Switch>
+                </BrowserRouter>
               </div>
             </div>
-          </ApolloProviderHooks>
-        </ApolloProvider>
-      </div>
-    );
-  }
+          </div>
+        </ApolloProviderHooks>
+      </ApolloProvider>
+    </div>
+  );
 }
 export default App;
