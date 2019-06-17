@@ -9,6 +9,7 @@
     "@types/react-dom": "16.8.4",
     "@types/react-router-dom": "^4.3.3",
     "@types/socket.io-client": "^1.4.32",
+    "@types/styled-components": "^4.1.16",
     "@types/universal-cookie": "^2.2.0",
     "apollo-boost": "^0.4.2",
     "apollo-client": "^2.6.0-rc.3",
@@ -20,6 +21,7 @@
     "react": "^16.8.6",
     "react-apollo": "^2.5.6",
     "react-apollo-hooks": "^0.4.5",
+    "react-bulma-components": "^2.3.0",
     "react-cookie": "^4.0.0",
     "react-dom": "^16.8.6",
     "react-iframe": "^1.8.0",
@@ -27,6 +29,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "socket.io-client": "^2.2.0",
+    "styled-components": "^4.3.1",
     "typescript": "3.5.1",
     "universal-cookie": "^4.0.0"
   },

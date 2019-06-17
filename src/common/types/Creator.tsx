@@ -4,6 +4,5 @@ export interface Creator {
     first_name: string,
     last_name: string,
     url: string,
-    public_url: string,
     thumbnail: string
 }

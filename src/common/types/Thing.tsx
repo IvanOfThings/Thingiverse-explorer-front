@@ -1,5 +1,5 @@
-//import { Creator } from './Creator';
-//import { Image } from './Image';
+import { Creator } from './Creator';
+import { Image } from './Image';
 /*
 export interface Thing {
     creator: Creator,
@@ -14,20 +14,6 @@ export interface Thing {
 */
 
 
-export type Image = {
-    id: number
-    name: string
-    url: string
-    sizes: [ImageSize]
-}
-
-
-export type ImageSize = {
-    imageSize: string
-    type: string
-    url: string
-}
-
 export interface ThingsData {
     id: number,
     name: string,
@@ -35,4 +21,5 @@ export interface ThingsData {
     default_image: Image
     collect_count: number,
     like_count: number
+    creator: Creator
 };

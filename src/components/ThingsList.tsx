@@ -10,7 +10,7 @@ export class ThingsList extends React.Component<ThingsListProps> {
     render() {
         const things = this.props.things;
         return (
-            <div className="ThingsList">
+            <div className="ThingsList items-page justify justify-left">
                 {
                     things && things.map((thing: ThingsData) => {
                         return (

@@ -1,4 +1,21 @@
-export interface Image {
+
+
+export type Image = {
+    id: number
+    name: string
+    url: string
+    sizes: [ImageSize]
+}
+
+
+export type ImageSize = {
+    imageSize: string
+    type: string
+    url: string
+}
+
+
+/*export interface Image {
     id: number,
     url: string,
     name: string,
@@ -27,4 +44,4 @@ export enum ImageType {
     preview = 1,
     thumb,
     display
-}
+}*/

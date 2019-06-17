@@ -37,6 +37,15 @@ export const Home: React.FC<HomeProps> = (props) => {
             }
             collect_count
             like_count
+            creator{
+                id
+                name
+                first_name
+                last_name
+                url
+                thumbnail
+                
+            }
         }
     }`;
 
