@@ -1,3 +1,8 @@
+
+# Thigiverse explorer Front-End Application
+
+This service is for its use as the Thingiverse explorer front-end App.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
