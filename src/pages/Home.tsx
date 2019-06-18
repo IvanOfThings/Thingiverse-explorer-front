@@ -5,6 +5,7 @@ import { ThingsData } from '../common/types/Thing'
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 
+import { ConditionalMessage } from '../components/ConditionalMessage';
 
 interface HomeProps {
     things: ThingsData[]
@@ -20,7 +21,7 @@ type ThingsListVariables = {
 
 
 export const Home: React.FC<HomeProps> = (props) => {
-    const [kind, setKind] = useState<string>("newest");
+    const [kind, setKind] = useState<string>("popular");
 
 
     const PRODUCTS_QUERY = gql`{
@@ -28,6 +29,7 @@ export const Home: React.FC<HomeProps> = (props) => {
             id
             name
             thumbnail
+            added
             default_image{
                 sizes{
                     url
@@ -56,8 +58,6 @@ export const Home: React.FC<HomeProps> = (props) => {
         }
     );
 
-    let loadingView = <span>Loading...</span>;
-    let loadedView = <span>Please choose an option from drop down button.</span>;
     if (data && data.things && data.things.length > 0) {
         return (
             <div >
@@ -74,11 +74,7 @@ export const Home: React.FC<HomeProps> = (props) => {
                 <div className="center_content top_content justify">
                     <DropDown onClick={setKind} />
                 </div>
-                <div className="center_content top_content bottom_content explore">
-                    {
-                        loading ? loadingView : loadedView
-                    }
-                </div>
+                <ConditionalMessage condition={loading} hidden={false} message1={"Loading..."} message2={"Please choose an option from drop down button."} />
             </div>
 
         );

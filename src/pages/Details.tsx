@@ -5,6 +5,11 @@ import { Button } from '../components/Button'
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 
+import { ConditionalMessage } from '../components/ConditionalMessage';
+import { ImageSize } from '../common/types/Image';
+import { Thing } from '../components/Thing/Thing';
+
+import './css/Details.css';
 
 interface dataType {
     thing: ThingsData
@@ -27,12 +32,11 @@ export const Details: React.FC<DetailsProps> = (props) => {
 
 
     const PRODUCTS_QUERY = gql`{
-        thing(id: ${params.id}) {
+        thing(id: ${params.id}) {        
             id
             name
             thumbnail
             default_image{
-                url
                 sizes{
                     url
                     imageSize
@@ -41,6 +45,19 @@ export const Details: React.FC<DetailsProps> = (props) => {
             }
             collect_count
             like_count
+            creator{
+                id
+                name
+                first_name
+                last_name
+                url
+                thumbnail                
+            }
+            added
+            is_featured
+            description_html
+            instructions_html
+            details
         }
     }`;
 
@@ -56,15 +73,63 @@ export const Details: React.FC<DetailsProps> = (props) => {
     let loadedView = <span>Resource not found</span>;
 
     if (data && data.thing) {
-        const { name, default_image, } = data.thing;
-        let image = default_image.sizes.find(function (element) {
-            return element.type === "preview";
-        })
-        let imageUrl: string = image ? image.url : default_image.url;
+        const { name, default_image, thumbnail, creator, added, collect_count, like_count } = data.thing;
+
+        let imageSizeValue: ImageSize | undefined = undefined;
+        if (default_image && default_image.sizes) {
+            imageSizeValue = default_image.sizes.find(function (element) {
+                return element.type === "preview";
+            })
+        }
+
+        //Obteniendo la fecha
+        const dateTimeSplitted = new Date(added).toString().split(" ");
+        const dateTime = `${dateTimeSplitted[1]} ${dateTimeSplitted[2]}, ${dateTimeSplitted[3]}`;
+
+        let imageUrl: string = imageSizeValue ? imageSizeValue.url : default_image ? default_image.url : thumbnail;
         loadedView = (
-            <div className="center_content top_content bottom_content explore">
-                <h1>{name}</h1>
-                <img src={imageUrl} alt={name} />
+            <div className="center_content top_content bottom_content">
+                <div className="item-page-header">
+                    <span className="inline">
+                        <a className="avatar-link" href="#" >
+                            <div className="avatar-wraper" >
+                                <img data-src="" src={creator.thumbnail} className="avatar" alt={creator.name} />
+                            </div>
+                        </a>
+                    </span>
+                    <div className="item-page-info">
+                        <h1>{name}</h1>
+                        <span>by <a href="#">{creator.name}</a></span>
+                        <span>{dateTime}</span>
+                    </div>
+                </div>
+                <div className="justify">
+                    <div className="inline width-3 gallery-holder">
+                        <div className="gallery page-gallery">
+                            <div className="gallery-main gallery-section">
+                                <img src={imageUrl} alt={name} />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="inline width-1 item-list-interactions top_content">
+                        <div className="item-interactions justify">
+                            <div className="interaction">
+                                <span className="center">
+                                    <a href="#" className="icon icon-comment center " title="Collect">
+                                        Like     <span className="interaction-count">{like_count}</span>
+                                    </a>
+                                </span>
+                            </div>
+                            <div className="interaction">
+                                <span className="center">
+                                    <a href="#" className="icon icon-comment center " title="Collect">
+                                        Collect      <span className="interaction-count">{collect_count}</span>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -73,7 +138,8 @@ export const Details: React.FC<DetailsProps> = (props) => {
             <div className="center_content top_content justify">
                 <Button to="/">Go back to Home page</Button>
             </div>
-            {loading ? loadingView : loadedView}
+            <ConditionalMessage condition={loading} hidden={!loading} message1={"Loading..."} message2={"Resource not Found."} />
+            {loading ? <div></div> : loadedView}
         </div>
     );
 

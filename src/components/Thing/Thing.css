@@ -1,0 +1,91 @@
+.interaction:last-child {
+    width: 33%;
+    border-right: none;
+}
+
+.interaction {
+    display: inline-block;
+    position: relative;
+    height: 100%;
+    width: calc(33% + 1px);
+    border-right: 1px solid #ececec;
+}
+
+.item .interaction .icon {
+    display: block;
+    width: 100%;
+    height: 1em;
+    text-align: center;
+    padding: 0;
+    line-height: 1em;
+}
+.icon {
+    padding-left: 14px;
+    text-decoration: none;
+    color: #666;
+    width: 0;
+    height: 1em;
+}
+
+
+.item-interactions {
+    height: 42px;
+    border-top: 1px solid #ececec;
+    font-size: 16px;
+    line-height: 1em;
+    position: relative;
+    background: #fff;
+}
+.item {
+    width: 296px;
+    height: 265px;
+    display: inline-block;
+    border: 2px solid #ececec;
+    border-radius: 3px;
+    font-size: 0;
+    line-height: 0;
+    position: relative;
+    margin-bottom: 20px;
+    background: #fff;
+    overflow: hidden;
+}
+
+
+
+.icon-like:before {
+    background: url(../../assets/icons/like-icon.png) 0 -796px no-repeat;
+    height: 14px;
+    width: 16px;
+}
+.icon-collect:before {
+    background: url(../../assets/icons/package-icon.png) 0 -796px no-repeat;
+    height: 16px;
+    width: 16px;
+}
+.icon-comment:before {
+    background: url(../../assets/icons/comment-icon.png) 0 -796px no-repeat;
+    height: 14px;
+    width: 16px;
+}
+
+.icon:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    left: -1em;
+}
+
+
+.item .interaction .icon::before {
+    position: relative;
+    display: inline-block;
+    top: -1px;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    vertical-align: middle;
+}
