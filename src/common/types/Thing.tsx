@@ -25,7 +25,7 @@ export interface ThingsData {
     like_count: number,
     added: string,
     is_featured: string,
-    description_html: string,
-    instructions_html: string,
+    description: string,
+    instructions: string,
     details: string
 };
