@@ -4,10 +4,9 @@ import { ThingsData } from '../common/types/Thing'
 import { Button } from '../components/Button'
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
+import { Link } from 'react-router-dom';
 
-import { ConditionalMessage } from '../components/ConditionalMessage';
 import { ImageSize } from '../common/types/Image';
-import { Thing } from '../components/Thing/Thing';
 
 import './css/Details.css';
 
@@ -69,11 +68,10 @@ export const Details: React.FC<DetailsProps> = (props) => {
         }
     );
 
-    let loadingView = <span>Loading...</span>;
     let loadedView = <span>Resource not found</span>;
 
     if (data && data.thing) {
-        const { name, default_image, thumbnail, creator, added, collect_count, like_count } = data.thing;
+        const { name, default_image, thumbnail, creator, added, id, description_html } = data.thing;
 
         let imageSizeValue: ImageSize | undefined = undefined;
         if (default_image && default_image.sizes) {
@@ -91,41 +89,33 @@ export const Details: React.FC<DetailsProps> = (props) => {
             <div className="center_content top_content bottom_content">
                 <div className="item-page-header">
                     <span className="inline">
-                        <a className="avatar-link" href="#" >
+                        <Link to={`/detail/${id}`} className="avatar-link"  >
                             <div className="avatar-wraper" >
                                 <img data-src="" src={creator.thumbnail} className="avatar" alt={creator.name} />
                             </div>
-                        </a>
+                        </Link>
                     </span>
                     <div className="item-page-info">
                         <h1>{name}</h1>
-                        <span>by <a href="#">{creator.name}</a></span>
+                        <span>by <Link to={`/detail/${id}`} >{creator.name}</Link></span>
                         <span>{dateTime}</span>
                     </div>
                 </div>
                 <div className="justify">
-                    <div className="inline width-3 gallery-holder">
+                    <div className="inline width-2 gallery-holder">
                         <div className="gallery page-gallery">
                             <div className="gallery-main gallery-section">
                                 <img src={imageUrl} alt={name} />
                             </div>
                         </div>
                     </div>
-                    <div className="inline width-1 item-list-interactions top_content">
-                        <div className="item-interactions justify">
-                            <div className="interaction">
-                                <span className="center">
-                                    <a href="#" className="icon icon-comment center " title="Collect">
-                                        Like     <span className="interaction-count">{like_count}</span>
-                                    </a>
-                                </span>
-                            </div>
-                            <div className="interaction">
-                                <span className="center">
-                                    <a href="#" className="icon icon-comment center " title="Collect">
-                                        Collect      <span className="interaction-count">{collect_count}</span>
-                                    </a>
-                                </span>
+                    <div className="width-1 inline">
+                        <div className="thing-info">
+                            <div id="description" className="thing-info-content rendered-markdown">
+                                <h1 className="thing-component-header sumary">Summary</h1>
+                                <p>
+                                    {description_html}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -138,8 +128,13 @@ export const Details: React.FC<DetailsProps> = (props) => {
             <div className="center_content top_content justify">
                 <Button to="/">Go back to Home page</Button>
             </div>
-            <ConditionalMessage condition={loading} hidden={!loading} message1={"Loading..."} message2={"Resource not Found."} />
-            {loading ? <div></div> : loadedView}
+            {
+                loading ?
+                    (
+                        <div className="center_content top_content bottom_content explore">
+                            <span className="content-center message"><h1>Loading...</h1></span>
+                        </div>
+                    ) : loadedView}
         </div>
     );
 

@@ -20,7 +20,7 @@ import 'bulma/css/bulma.css';
 import './App.css';
 
 const App: React.FC = (props) => {
-  const [access_token, setAccess_token] = useCookies("access_token");
+  const [access_token] = useCookies("access_token");
 
   const httpLink = createHttpLink({
     uri: `${process.env.REACT_APP_BACK_GRAPHQL_URL}`

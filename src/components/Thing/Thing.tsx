@@ -25,7 +25,6 @@ export const Thing: React.FC<ThingProp> = (props) => {
     const dateTime = `${dateTimeSplitted[1]} ${dateTimeSplitted[2]}, ${dateTimeSplitted[3]}`;
     let imageUrl: string = image ? image.url : thumbnail;
     return (
-        // <Link to={`/detail/${id}`} className="card">
         <div className="card item thing-cad">
             <div className="item-header">
                 <a className="avatar-link" href={creator.thumbnail} >
@@ -36,7 +35,7 @@ export const Thing: React.FC<ThingProp> = (props) => {
                     <a href="/"><span className="ellipsis">{name}</span></a>
                     <div className="justify">
                         <span className="item-creator ellipsis">by
-                        <a href="/">{creator.name}</a></span>
+                        <Link to={`/detail/${id}`}>{creator.name}</Link></span>
                         <span className="item-date">{dateTime}</span>
                     </div>
                 </div>
@@ -48,27 +47,26 @@ export const Thing: React.FC<ThingProp> = (props) => {
             <div className="item-interactions justify">
                 <span className="interaction">
                     <span className="center">
-                        <a href="#" data-type="things" className="icon icon-like center " title="Like">
+                        <Link to={`/detail/${id}`} className="icon icon-like center " title="Like">
                             <span className="interaction-count">{like_count}</span>
-                        </a>
+                        </Link>
                     </span>
                 </span>
                 <span className="interaction">
                     <span className="center">
-                        <a href="#" data-type="things" className="icon icon-collect center " title="Like">
+                        <Link to={`/detail/${id}`} data-type="things" className="icon icon-collect center " title="Collection">
                             <span className="interaction-count">{collect_count}</span>
-                        </a>
+                        </Link>
                     </span>
                 </span>
                 <span className="interaction">
                     <span className="center">
-                        <a href="#" data-type="things" className="icon icon-comment center " title="Like">
+                        <Link to={`/detail/${id}`} data-type="things" className="icon icon-comment center " title="Comment">
                             <span className="interaction-count">{}</span>
-                        </a>
+                        </Link>
                     </span>
                 </span>
             </div>
         </div >
-        //</Link>
     );
 }
